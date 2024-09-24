@@ -45,3 +45,15 @@ Additional Resources:
 - React Router Documentation: https://reactrouter.com/web/guides/quick-start
 
 When working on this project, please refer to the existing code structure and naming conventions. Ensure that all new code and modifications align with the current architecture and coding style.
+
+
+Summary of Application Flow:
+The application's routing is managed in src/App.js using React Router. The main route ("/") renders the CommunityActionsWidget component, which serves as the dashboard and entry point for users. From there, users can navigate to different sections of the application:
+
+- /creative-teams: Renders the CreativeTeams component
+- /reading-clubs: Renders the ReadingClubs component
+- /governance: Renders the Governance component
+- /development-teams: Renders the DevelopmentTeams component
+
+Each of these components is located in the /components directory and handles its specific functionality. The Governance component, in particular, utilizes the governanceMachine for state management and renders sub-components like CreateProposal, ProposalDetails, and VotingForm based on the current state.
+
