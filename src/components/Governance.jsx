@@ -1,26 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useMachine } from '@xstate/react';
 import { governanceMachine } from '../governanceMachine';
+import { CharmverseContext } from '../contexts/CharmverseContext';
 import CreateProposal from './CreateProposal';
 import ProposalDetails from './ProposalDetails';
 import VotingForm from './VotingForm';
+import ViewProposals from './ViewProposals';
 
 const Governance = () => {
   const [state, send] = useMachine(governanceMachine);
   const [activeTab, setActiveTab] = useState('overview');
-  const [proposals, setProposals] = useState([]);
+  const { proposals, fetchProposals, loading, error } = useContext(CharmverseContext);
 
   useEffect(() => {
     fetchProposals();
   }, []);
-
-  const fetchProposals = async () => {
-    setProposals([
-      { id: 1, title: 'Increase Book Publishing Budget', status: 'Active', votingEnds: '3 days' },
-      { id: 2, title: 'New Community Event Series', status: 'Active', votingEnds: '5 days' },
-      { id: 3, title: 'Update DAO Constitution', status: 'Passed', votingEnds: 'Ended' },
-    ]);
-  };
 
   const renderContent = () => {
     switch (state.value) {
@@ -55,33 +49,7 @@ const Governance = () => {
               </div>
             )}
             {activeTab === 'proposals' && (
-              <div>
-                <h2 className="text-2xl font-semibold mb-4">Active Proposals</h2>
-                <p className="mb-4">Here you can view all current proposals and their status. Click on a proposal to see more details and cast your vote.</p>
-                <ul className="space-y-4">
-                  {proposals.map((proposal) => (
-                    <li key={proposal.id} className="border rounded-lg p-4">
-                      <h3 className="text-xl font-medium">{proposal.title}</h3>
-                      <p className="text-gray-600">Status: {proposal.status}</p>
-                      <p className="text-gray-600">Voting ends: {proposal.votingEnds}</p>
-                      <button
-                        onClick={() => send('SELECT_PROPOSAL', { proposalId: proposal.id })}
-                        className="text-blue-500 hover:underline"
-                      >
-                        View Details and Vote
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6">
-                  <button
-                    onClick={() => send('CREATE_PROPOSAL')}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                  >
-                    Create New Proposal
-                  </button>
-                </div>
-              </div>
+              <ViewProposals proposals={proposals} loading={loading} error={error} send={send} />
             )}
             {activeTab === 'voting' && (
               <div>

@@ -57,3 +57,22 @@ The application's routing is managed in src/App.js using React Router. The main 
 
 Each of these components is located in the /components directory and handles its specific functionality. The Governance component, in particular, utilizes the governanceMachine for state management and renders sub-components like CreateProposal, ProposalDetails, and VotingForm based on the current state.
 
+Charmverse Integration:
+- src/contexts/CharmverseContext.js: React Context for managing Charmverse API state
+- src/services/charmverseApi.js: Service functions for Charmverse API endpoints
+- src/components/TestCharmverseIntegration.jsx: Test component demonstrating Charmverse API integration
+
+The CharmverseContext provides a centralized way to manage Charmverse data and API calls throughout the application. The charmverseApi.js file contains functions for interacting with specific Charmverse API endpoints, with initial focus on the GET /api/proposals endpoint.
+
+
+Charmverse Integration Updates:
+
+The following components have been refactored to use CharmverseContext and Charmverse API:
+
+- src/components/Governance.jsx: Now uses CharmverseContext for managing governance data and state.
+- src/components/CreateProposal.js: Proposal creation now uses Charmverse API calls.
+- src/components/ProposalDetails.js: Fetches and displays proposal details from Charmverse.
+- src/components/VotingForm.js: Voting mechanism updated to use Charmverse API.
+- src/components/ViewProposals.js: Fetches and displays proposals from Charmverse.
+
+These components now handle asynchronous data fetching, including loading states and error handling. They maintain compatibility with the existing governanceMachine state management while leveraging Charmverse data and functionality.
