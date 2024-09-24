@@ -1,0 +1,47 @@
+CommunityActions Application Overview
+
+Function:
+CommunityActions is a web application designed to facilitate community governance, proposal creation, and voting within decentralized autonomous organizations (DAOs). It provides interfaces for managing creative teams, reading clubs, and development teams, with a focus on governance activities.
+
+Structure:
+The application is built using React and follows a component-based architecture. It utilizes XState for state management, particularly in governance-related features.
+
+Key Dependencies (from package.json):
+- React: ^18.3.1
+- React Router: ^5.3.4
+- XState: ^5.18.2
+- @xstate/react: ^4.1.3
+- Tailwind CSS (for styling)
+
+Application Flow:
+1. Users land on the main page (CommunityActionsWidget)
+2. They can navigate to different sections: Creative Teams, Reading Clubs, Governance, and Development Teams
+3. In the Governance section, users can view proposals, create new proposals, and vote on existing ones
+
+Key Components and Files:
+- src/App.js: Main application component and routing
+- src/components/Governance/CommunityActionsWidget.jsx: Dashboard component
+- src/components/Governance.jsx: Main governance component
+- src/components/CreativeTeams.jsx: Creative teams management
+- src/components/ReadingClubs.jsx: Reading clubs management
+- src/components/DevelopmentTeams.jsx: Development teams management
+- src/governanceMachine.js: XState machine for governance logic
+- src/components/CreateProposal.js: Proposal creation component
+- src/components/ProposalDetails.js: Proposal details view
+- src/components/VotingForm.js: Voting interface
+- src/components/ViewProposals.js: List of proposals
+
+Integration Task:
+We are integrating Charmverse API to replace our current mock data and enhance governance functionalities. This involves updating our components, state management, and adding new API service functions.
+
+Charmverse API Documentation:
+Please read the Charmverse API documentation at: https://charmverse.io/api-docs
+
+GitHub Repository:
+Our project repository is available at: https://github.com/PageDAO/gov
+
+Additional Resources:
+- XState Documentation: https://xstate.js.org/docs/
+- React Router Documentation: https://reactrouter.com/web/guides/quick-start
+
+When working on this project, please refer to the existing code structure and naming conventions. Ensure that all new code and modifications align with the current architecture and coding style.
