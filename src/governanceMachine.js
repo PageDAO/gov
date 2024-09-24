@@ -1,98 +1,91 @@
-// governanceMachine.js
 import { createMachine, assign } from 'xstate';
-import { fetchProposals, fetchProposalDetails, submitVote, createProposal } from './services/api';
+import { useApi } from './services/api';
 
-export const governanceMachine = createMachine({
-  id: 'governance',
-  initial: 'idle',
-  context: {
-    proposals: [],
-    currentProposal: null,
-    error: null,
-  },
-  states: {
-    idle: {
-      on: {
-        VIEW_PROPOSALS: 'loadingProposals',
-        CREATE_PROPOSAL: 'creatingProposal',
-      },
+export const createGovernanceMachine = () => {
+  const { fetchProposals, fetchProposalDetails, submitVote, createProposal } = useApi();
+
+  return createMachine({
+    id: 'governance',
+    initial: 'idle',
+    context: {
+      proposals: [],
+      selectedProposal: null,
+      error: null,
     },
-    loadingProposals: {
-      invoke: {
-        src: 'fetchProposals',
-        onDone: {
-          target: 'viewingProposals',
-          actions: assign({ proposals: (_, event) => event.data }),
-        },
-        onError: {
-          target: 'error',
-          actions: assign({ error: (_, event) => event.data }),
+    states: {
+      idle: {
+        on: {
+          VIEW_PROPOSALS: 'viewingProposals',
+          CREATE_PROPOSAL: 'creatingProposal',
         },
       },
-    },
-    viewingProposals: {
-      on: {
-        SELECT_PROPOSAL: 'loadingProposalDetails',
-        REFRESH: 'loadingProposals',
-        CREATE_PROPOSAL: 'creatingProposal',
-      },
-    },
-    loadingProposalDetails: {
-      invoke: {
-        src: 'fetchProposalDetails',
-        onDone: {
-          target: 'viewingProposalDetails',
-          actions: assign({ currentProposal: (_, event) => event.data }),
+      viewingProposals: {
+        invoke: {
+          src: 'fetchProposals',
+          onDone: {
+            target: 'viewingProposals',
+            actions: assign({ proposals: (_, event) => event.data }),
+          },
+          onError: {
+            target: 'viewingProposals',
+            actions: assign({ error: (_, event) => event.data }),
+          },
         },
-        onError: {
-          target: 'error',
-          actions: assign({ error: (_, event) => event.data }),
+        on: {
+          SELECT_PROPOSAL: 'viewingProposalDetails',
+          BACK: 'idle',
         },
       },
-    },
-    viewingProposalDetails: {
-      on: {
-        VOTE: 'voting',
-        BACK: 'viewingProposals',
+      viewingProposalDetails: {
+        invoke: {
+          src: 'fetchProposalDetails',
+          onDone: {
+            target: 'viewingProposalDetails',
+            actions: assign({ selectedProposal: (_, event) => event.data }),
+          },
+          onError: {
+            target: 'viewingProposalDetails',
+            actions: assign({ error: (_, event) => event.data }),
+          },
+        },
+        on: {
+          VOTE: 'voting',
+          BACK: 'viewingProposals',
+        },
       },
-    },
-    voting: {
-      invoke: {
-        src: 'submitVote',
-        onDone: 'loadingProposalDetails',
-        onError: {
-          target: 'error',
-          actions: assign({ error: (_, event) => event.data }),
+      voting: {
+        invoke: {
+          src: 'submitVote',
+          onDone: 'viewingProposalDetails',
+          onError: {
+            target: 'voting',
+            actions: assign({ error: (_, event) => event.data }),
+          },
+        },
+        on: {
+          CANCEL: 'viewingProposalDetails',
+        },
+      },
+      creatingProposal: {
+        invoke: {
+          src: 'createProposal',
+          onDone: 'idle',
+          onError: {
+            target: 'creatingProposal',
+            actions: assign({ error: (_, event) => event.data }),
+          },
+        },
+        on: {
+          CANCEL: 'idle',
         },
       },
     },
-    creatingProposal: {
-      on: {
-        SUBMIT: 'submittingProposal',
-        CANCEL: 'idle',
-      },
+  }, {
+    services: {
+      fetchProposals,
+      fetchProposalDetails: (context, event) => fetchProposalDetails(event.proposalId),
+      submitVote: (context, event) => submitVote(event.proposalId, event.vote),
+      createProposal: (context, event) => createProposal(event.proposalData),
     },
-    submittingProposal: {
-      invoke: {
-        src: 'createProposal',
-        onDone: 'loadingProposals',
-        onError: {
-          target: 'error',
-          actions: assign({ error: (_, event) => event.data }),
-        },
-      },
-    },
-    error: {
-      on: {
-        RETRY: 'idle',
-      },
-    },
-  },
-}, {
-  services: {
-    fetchProposals,
-    fetchProposalDetails: (context, event) => fetchProposalDetails(event.proposalId),
-    submitVote: (context, event) => submitVote(event.proposalId, event.vote),
-    createProposal,
-  },
-});
+  });
+};

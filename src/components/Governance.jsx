@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useMachine } from '@xstate/react';
-import { governanceMachine } from '../governanceMachine';
+import { createGovernanceMachine } from '../governanceMachine';
 import { CharmverseContext } from '../contexts/CharmverseContext';
 import CreateProposal from './CreateProposal';
 import ProposalDetails from './ProposalDetails';
@@ -8,7 +8,7 @@ import VotingForm from './VotingForm';
 import ViewProposals from './ViewProposals';
 
 const Governance = () => {
-  const [state, send] = useMachine(governanceMachine);
+  const [state, send] = useMachine(createGovernanceMachine());
   const [activeTab, setActiveTab] = useState('overview');
   const { proposals, fetchProposals, loading, error } = useContext(CharmverseContext);
 
