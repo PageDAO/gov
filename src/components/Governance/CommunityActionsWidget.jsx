@@ -4,6 +4,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CommunityActionsWidget = () => {
+  const fetchActions = async () => {
+    const response = await fetch('/api/community-actions');
+    return response.json();
+  };
+  
   const actions = [
     {
       title: 'Creative Teams',

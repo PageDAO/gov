@@ -7,6 +7,12 @@ function ProposalDetails({ send, proposalId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchProposalDetails = async (proposalId) => {
+    const response = await fetch(`/api/proposals/${proposalId}`);
+    return response.json();
+  };
+  
+
   useEffect(() => {
     const fetchProposalDetails = async () => {
       try {

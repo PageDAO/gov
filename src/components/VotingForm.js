@@ -4,6 +4,15 @@ import { CharmverseContext } from '../contexts/CharmverseContext';
 function VotingForm({ send, proposalId }) {
   const [vote, setVote] = useState('');
   const { castVote } = useContext(CharmverseContext);
+  const submitVote = async (proposalId, vote) => {
+    const response = await fetch(`/api/proposals/${proposalId}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vote }),
+    });
+    return response.json();
+  };
+  
 
   const handleVote = async () => {
     try {
