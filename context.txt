@@ -76,3 +76,12 @@ The following components have been refactored to use CharmverseContext and Charm
 - src/components/ViewProposals.js: Fetches and displays proposals from Charmverse.
 
 These components now handle asynchronous data fetching, including loading states and error handling. They maintain compatibility with the existing governanceMachine state management while leveraging Charmverse data and functionality.
+
+
+Dynamic.xyz Integration:
+The application will use Dynamic.xyz for user management and authentication. This integration will handle the login process and provide Ethereum address information to be used with Charmverse API calls. Key points:
+
+- User authentication will be managed through Dynamic.xyz
+- Ethereum addresses obtained from Dynamic.xyz will be used for Charmverse API authentication
+- The login flow needs to be updated to incorporate Dynamic.xyz SDK
+- CharmverseContext and API services will need to be modified to work with the new authentication flow
